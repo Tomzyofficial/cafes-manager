@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cafes Manager</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <div id="toast-container"></div>
+
+    <main class="container">
+      <h1>Cafes Manager</h1>
+      <p class="subtitle">
+        Add, edit, and delete cafes — synced live with Firestore.
+      </p>
+
+      <form id="cafe-form" class="cafe-form">
+        <input type="hidden" id="cafe-id" value="" />
+        <div class="form-row">
+          <input
+            type="text"
+            id="cafe-name"
+            placeholder="Cafe name"
+            autocomplete="off"
+            required
+          />
+          <input
+            type="text"
+            id="cafe-city"
+            placeholder="City"
+            autocomplete="off"
+            required
+          />
+          <button type="submit" id="save-btn">Save</button>
+          <button type="button" id="cancel-btn" class="hidden">Cancel</button>
+        </div>
+        <p id="form-error" class="form-error hidden"></p>
+      </form>
+
+      <div id="loading" class="loading">Loading cafes...</div>
+
+      <table class="cafe-table hidden" id="cafe-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>City</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="cafe-table-body"></tbody>
+      </table>
+
+      <p id="empty-state" class="empty-state hidden">
+        No cafes yet. Add one above!
+      </p>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+  </body>
+</html>

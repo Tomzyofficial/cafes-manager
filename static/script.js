@@ -17,12 +17,12 @@ let cafesById = {};
 
 // Ids we just changed ourselves, so we don't show a redundant toast when
 // the corresponding Firestore snapshot event echoes back to this tab.
-const recentlyChangedByMe = new Set();
+// const recentlyChangedByMe = new Set();
 
-function markAsMyChange(id) {
-  recentlyChangedByMe.add(id);
-  setTimeout(() => recentlyChangedByMe.delete(id), 4000);
-}
+// function markAsMyChange(id) {
+//   recentlyChangedByMe.add(id);
+//   setTimeout(() => recentlyChangedByMe.delete(id), 500);
+// }
 
 // this function renders the table of cafes based on the current state of cafesById. It sorts the cafes by name, clears the table body, and creates a new row for each cafe with its name, city, and action buttons for editing and deleting. If there are no cafes, it shows an empty state message instead of the table.
 function renderTable() {
@@ -152,7 +152,7 @@ form.addEventListener("submit", async (e) => {
     // Update local cache immediately (the Socket.IO event will also arrive
     // and simply confirm the same data, which is harmless).
     cafesById[data.id] = { id: data.id, name: data.name, city: data.city };
-    markAsMyChange(data.id);
+    //  markAsMyChange(data.id);
     renderTable();
     resetForm();
   } catch (err) {
@@ -175,7 +175,7 @@ async function deleteCafe(id, name) {
       return;
     }
 
-    markAsMyChange(id);
+    //  markAsMyChange(id);
     delete cafesById[id];
     renderTable();
 
@@ -211,21 +211,26 @@ socket.on("connect", () => {
 socket.on("cafe_update", (payload) => {
   const { type, id, name, city } = payload;
 
-  const isMine = recentlyChangedByMe.has(id);
+  console.log(type, id, name, city);
+
+  //   const isMine = recentlyChangedByMe.has(id);
 
   if (type === "ADDED") {
     cafesById[id] = { id, name, city };
     renderTable();
-    if (!isMine) showToast(`Cafe "${name}" added`, "added");
+    //  if (!isMine) showToast(`Cafe "${name}" added`, "added");
+    showToast(`Cafe "${name}" added`, "added");
   } else if (type === "MODIFIED") {
     cafesById[id] = { id, name, city };
     renderTable();
-    if (!isMine) showToast(`Cafe "${name}" updated`);
+    //  if (!isMine) showToast(`Cafe "${name}" updated`);
+    showToast(`Cafe "${name}" updated`);
   } else if (type === "REMOVED") {
     const existed = Boolean(cafesById[id]);
     delete cafesById[id];
     renderTable();
-    if (existed && !isMine) showToast(`Cafe "${name}" deleted`, "removed");
+    //  if (existed && !isMine) showToast(`Cafe "${name}" deleted`, "removed");
+    showToast(`Cafe "${name}" deleted`, "removed");
   }
 });
 
